@@ -12,7 +12,7 @@ $warehouse_backup->backup_to_warehouse();
 
 =cut
 
-package ReferenceTrack::Repository::Warehouse;
+package ReferenceTrack::Repository::Git::Warehouse;
 use Moose;
 #use Git::Repository;
 #use ReferenceTrack::Repository;

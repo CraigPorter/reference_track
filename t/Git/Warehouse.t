@@ -7,7 +7,7 @@ use File::Temp;
 BEGIN { unshift(@INC, './modules') }
 BEGIN {
     use Test::Most;
-    use_ok('ReferenceTrack::Repository::Warehouse');
+    use_ok('ReferenceTrack::Repository::Git::Warehouse');
 }
 
 # temp warehouse directory
@@ -19,8 +19,8 @@ my $reference_url = 'file://///nfs/pathnfs02/references/Escherichia/coli/Escheri
 #my $warehouse_url = 'file:////'.$warehouse_dir.'/test_warehouse.git';
 my $warehouse_url = $warehouse_dir.'/test_warehouse.git';
 
-my $warehouse = ReferenceTrack::Repository::Warehouse->new( reference_location => $reference_url,
-							    warehouse_location => $warehouse_url );
+my $warehouse = ReferenceTrack::Repository::Git::Warehouse->new( reference_location => $reference_url,
+								 warehouse_location => $warehouse_url );
 
 is $warehouse->reference_exists, 1, 'confirm reference exists';
 is $warehouse->warehouse_exists, 0, 'confirm warehouse does not exist';
