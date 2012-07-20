@@ -14,8 +14,6 @@ $warehouse_backup->backup_to_warehouse();
 
 package ReferenceTrack::Repository::Git::Warehouse;
 use Moose;
-#use Git::Repository;
-#use ReferenceTrack::Repository;
 use ReferenceTrack::Repository::Git::Instance;
 
 has 'reference_location' => ( is => 'ro', isa => 'Str', required => 1 ); # git reference (can be url).
@@ -73,7 +71,7 @@ sub clone_to_warehouse
     return 0 unless $self->reference_exists;
     return 0 if $self->warehouse_exists;
 
-    print Git::Repository->run( clone => ('--bare', '--no-hardlinks', $self->reference_location, $self->warehouse_location) ), "\n";
+    Git::Repository->run( clone => ('--bare', '--no-hardlinks', $self->reference_location, $self->warehouse_location) );
 
     return $self->warehouse_exists;
 }
@@ -89,17 +87,20 @@ sub backup_to_warehouse
     my $temp_repo = $self->_temp_repository->git_instance;
 
     # remote add warehouse
-    print $temp_repo->run(remote => ('add','warehouse',$self->warehouse_location));
+    $temp_repo->run(remote => ('add','warehouse',$self->warehouse_location));
+
+    # fetch all
+    $temp_repo->run(fetch => '--all');
 
     # update version branches
     for my $version_branch ($self->list_version_branches)
     {
-	print $temp_repo->run(checkout => ('--track', $version_branch)),"\n";
-        print $temp_repo->run(push => 'warehouse'),"\n";
+	$temp_repo->run(checkout => ('--track', $version_branch));
+	$temp_repo->run(push => 'warehouse');
     }
     # update master 
-    print $temp_repo->run(checkout => 'master'),"\n";
-    print $temp_repo->run(push => 'warehouse'),"\n";
+    $temp_repo->run(checkout => 'master');
+    $temp_repo->run(push => 'warehouse');
 
     return 1;
 }

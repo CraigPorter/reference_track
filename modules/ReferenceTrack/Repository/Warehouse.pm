@@ -66,19 +66,6 @@ sub backup_repositories_to_warehouse
     return 1;
 }
 
-
-# Note:
-
-# has search result (use search module to provide list of repos)
-# has Warehouse directory
-
-# has list of repositories built from search result name + url
-# note set name from name field 
-
-# for moment assume repository urls are for reference repos
-
-
-
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
