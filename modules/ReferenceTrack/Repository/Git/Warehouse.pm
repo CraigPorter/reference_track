@@ -4,7 +4,7 @@ Warehouse - wrapper for cloning and updating a backup repository.
 
 =head1 SYNOPSYS
 
-use ....
+use ReferenceTrack::Repository::Git::Warehouse;
 my $warehouse_backup = ReferenceTrack::Repository::Warehouse->new(reference_location = $reference, 
                                                                   warehouse_location = $warehouse);
 $warehouse_backup->clone_to_warehouse();

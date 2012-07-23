@@ -30,15 +30,9 @@ close(STDOUT); open(STDOUT, ">&", $copy_stdout); # Restore STDOUT
 close(STDERR); open(STDERR, ">&", $copy_stderr); # Restore STDERR
 ok(-e $reference_dir.'/test.git/HEAD','created dummy reference');
 
-#$reference_url = 'file://///nfs/pathnfs02/references/Escherichia/coli/Escherichia_coli_etec_h10407.git';
-#exit;
-
 # temp warehouse directory
 my $warehouse_tmpdirectory_obj = File::Temp->newdir(CLEANUP => 1);
 my $warehouse_dir = $warehouse_tmpdirectory_obj->dirname();
-#my $warehouse_dir = '/lustre/scratch108/pathogen/cp7/test_reference_repo/Warehouse';
-
-#my $warehouse_url = 'file:////'.$warehouse_dir.'/test_warehouse.git';
 my $warehouse_url = $warehouse_dir.'/test_warehouse.git';
 
 my $warehouse = ReferenceTrack::Repository::Git::Warehouse->new( reference_location => $reference_url,
@@ -51,8 +45,5 @@ ok $warehouse->clone_to_warehouse,  'clone to warehouse';
 is $warehouse->warehouse_exists, 1, 'confirm warehouse exists';
 
 ok $warehouse->backup_to_warehouse, 'backup to warehouse';
-
-
-#print "Versions:\n",join("\n",$warehouse->list_version_branches),"\n";
 
 done_testing();
