@@ -3,19 +3,41 @@
 use strict;
 use warnings;
 use File::Temp;
+use Data::Dumper;
+use Test::MockObject;
+use Cwd;
 
 BEGIN { unshift(@INC, './modules') }
 BEGIN {
     use Test::Most;
     use_ok('ReferenceTrack::Repository::Git::Warehouse');
+    use_ok('ReferenceTrack::Repository::Git::Remote'); # use new remote object for test
 }
 
+# temp reference
+my $reference_tmpdirectory_obj = File::Temp->newdir(CLEANUP => 1);
+my $reference_dir = $reference_tmpdirectory_obj->dirname();
+my $reference_url = 'file:////'.$reference_dir.'/test.git';
+
+my $reference = ReferenceTrack::Repository::Git::Remote->new( root => $reference_dir,
+							      name => 'test.git',
+							      location => $reference_url);
+
+open(my $copy_stdout, ">&STDOUT"); open(STDOUT, '>/dev/null'); # Redirect STDOUT
+open(my $copy_stderr, ">&STDERR"); open(STDERR, '>/dev/null'); # Redirect STDERR
+$reference->create(); # Initialize empty shared Git repository
+close(STDOUT); open(STDOUT, ">&", $copy_stdout); # Restore STDOUT
+close(STDERR); open(STDERR, ">&", $copy_stderr); # Restore STDERR
+ok(-e $reference_dir.'/test.git/HEAD','created dummy reference');
+
+#$reference_url = 'file://///nfs/pathnfs02/references/Escherichia/coli/Escherichia_coli_etec_h10407.git';
+#exit;
+
 # temp warehouse directory
-my $tmpdirectory_obj = File::Temp->newdir(CLEANUP => 1);
-my $warehouse_dir = $tmpdirectory_obj->dirname();
+my $warehouse_tmpdirectory_obj = File::Temp->newdir(CLEANUP => 1);
+my $warehouse_dir = $warehouse_tmpdirectory_obj->dirname();
 #my $warehouse_dir = '/lustre/scratch108/pathogen/cp7/test_reference_repo/Warehouse';
 
-my $reference_url = 'file://///nfs/pathnfs02/references/Escherichia/coli/Escherichia_coli_etec_h10407.git';
 #my $warehouse_url = 'file:////'.$warehouse_dir.'/test_warehouse.git';
 my $warehouse_url = $warehouse_dir.'/test_warehouse.git';
 
