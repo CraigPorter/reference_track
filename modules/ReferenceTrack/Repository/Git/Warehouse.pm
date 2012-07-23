@@ -16,8 +16,9 @@ package ReferenceTrack::Repository::Git::Warehouse;
 use Moose;
 use ReferenceTrack::Repository::Git::Instance;
 
-has 'reference_location' => ( is => 'ro', isa => 'Str', required => 1 ); # git reference (can be url).
-has 'warehouse_location' => ( is => 'ro', isa => 'Str', required => 1 ); # git warehouse (can't be url if setting-up).
+has 'reference_location' => ( is => 'ro', isa => 'Str', required => 1 );     # git reference (can be url).
+has 'warehouse_location' => ( is => 'ro', isa => 'Str', required => 1 );     # git warehouse (can't be url if setting-up).
+has 'verbose' => ( is => 'ro', isa => 'Bool', required => 0, default => 0 ); # verbose flag
 has '_temp_repository' => ( is => 'rw', isa => 'ReferenceTrack::Repository::Git::Instance', lazy => 1, builder => '_build__temp_repository'); # work repo
 
 sub _build__temp_repository
@@ -33,6 +34,22 @@ sub _is_repository_location_exists
     return $@ ? 0:1;
 }
 
+# Execute Git::Repository::Command for _temp_repository
+sub _git_command
+{
+    my($self, @cmd) = @_;
+
+    my $git_cmd = $self->_temp_repository->git_instance->command(@cmd);
+    
+    my @git_cmdline = $git_cmd->cmdline();
+    my @git_stdout  = $git_cmd->stdout->getlines();
+    my @git_stderr  = $git_cmd->stderr->getlines();
+    $git_cmd->close;
+
+    print join(' ',@git_cmdline),"\n" if $self->verbose;
+
+    return $git_cmd->exit() ? 0:1;
+}
 
 sub reference_exists
 {
@@ -76,7 +93,6 @@ sub clone_to_warehouse
     return $self->warehouse_exists;
 }
 
-
 sub backup_to_warehouse
 {
     my($self) = @_;
@@ -84,23 +100,21 @@ sub backup_to_warehouse
     return 0 unless $self->reference_exists;
     return 0 unless $self->warehouse_exists;
 
-    my $temp_repo = $self->_temp_repository->git_instance;
-
     # remote add warehouse
-    $temp_repo->run(remote => ('add','warehouse',$self->warehouse_location));
+    $self->_git_command(remote => ('add','warehouse',$self->warehouse_location));
 
     # fetch all
-    $temp_repo->run(fetch => '--all');
+    $self->_git_command(fetch => '--all');
 
     # update version branches
     for my $version_branch ($self->list_version_branches)
     {
-	$temp_repo->run(checkout => ('--track', $version_branch));
-	$temp_repo->run(push => 'warehouse');
+	$self->_git_command(checkout => ('--track', $version_branch));
+	$self->_git_command(push => 'warehouse');
     }
     # update master 
-    $temp_repo->run(checkout => 'master');
-    $temp_repo->run(push => 'warehouse');
+    $self->_git_command(checkout => 'master');
+    $self->_git_command(push => 'warehouse');
 
     return 1;
 }
