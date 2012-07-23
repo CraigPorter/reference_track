@@ -6,7 +6,7 @@ reference_track_backup.pl
 
 =head1 SYNOPSIS
 
-reference_track_backup.pl -d database_name [-w warehouse_directory] [-r repo_name]
+reference_track_backup.pl -d database_name [-w warehouse_directory] [-r repo_name] [-v]
 
 =head1 DESCRIPTION
 
@@ -33,6 +33,7 @@ Usage: $0
      -database|d        <database name> (Required)
      -warehouse|w       <warehouse directory>
      -reference|r       <reference name>
+     -verbose|v         <verbose>
      -h|help            <print this message>
 
 A program for backup of reference repositories from a reference-tracking
@@ -48,11 +49,12 @@ be used to select the reposories to backup:
 ];
 
 # options
-my($database,$reference,$warehouse,$help);
+my($database,$reference,$warehouse,$verbose,$help);
 
 GetOptions ( 'database|d=s'  => \$database,  # database name (required)
 	     'warehouse|w:s' => \$warehouse, # warehouse directory
 	     'reference|r:s' => \$reference, # query term
+	     'verbose|v'     => \$verbose,   # verbose flag
 	     'help|h'        => \$help );
 
 if($help)
@@ -69,6 +71,7 @@ $warehouse ||= '/lustre/scratch108/pathogen/cp7/test_reference_repo/Warehouse'; 
 
 $reference ||= ''; # empty string finds all reference repositories
 
+$verbose = defined $verbose ? 1:0;
 
 # database settings
 my %database_settings;
@@ -86,7 +89,8 @@ my $repository_search = ReferenceTrack::Repository::Search->new( database_settin
 
 # update references
 my $warehouse_backup = ReferenceTrack::Repository::Warehouse->new( repository_search_results => $repository_search,
-								   warehouse_directory       => $warehouse );
+								   warehouse_directory       => $warehouse,
+								   verbose                   => $verbose );
 $warehouse_backup->backup_repositories_to_warehouse;
 
 exit;

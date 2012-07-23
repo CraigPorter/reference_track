@@ -88,7 +88,7 @@ sub clone_to_warehouse
     return 0 unless $self->reference_exists;
     return 0 if $self->warehouse_exists;
 
-    Git::Repository->run( clone => ('--bare', '--no-hardlinks', $self->reference_location, $self->warehouse_location) );
+    $self->_git_command( clone => ('--bare', '--no-hardlinks', $self->reference_location, $self->warehouse_location) );
 
     return $self->warehouse_exists;
 }
