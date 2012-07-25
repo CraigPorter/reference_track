@@ -37,11 +37,11 @@ GetOptions ('database|d=s'    => \$database,
             'n|short_name=s'       => \$short_name,
             'm|major_release=s'    => \$major_release,
             'd|minor_release=s'    => \$minor_release,
-            'u|upload_to_ftp_site' => \$upload_to_ftp_site
+            'u|upload_to_ftp_site:s' => \$upload_to_ftp_site
             
 );
 
-((@repository_details == 2) ||$upload_to_ftp_site ||$public_release_repository || $major_release || $minor_release || (@creation_details == 3 && $short_name))or die <<USAGE;
+((@repository_details == 2) || defined $upload_to_ftp_site ||$public_release_repository || $major_release || $minor_release || (@creation_details == 3 && $short_name))or die <<USAGE;
 Usage: $0 [options]
 Query the reference tracking system
 
@@ -72,8 +72,28 @@ $database_settings{password} = $ENV{VRTRACK_PASSWORD};
 
 $starting_version ||= "0.1";
 
+# Debug:
+
+print $database_settings{database},"\n";
+print $database_settings{host},"\n";
+print $database_settings{port},"\n";
+print $database_settings{ro_user},"\n";
+print $database_settings{rw_user},"\n";
+print $database_settings{password},"\n";
+
+print "\nUpload = '",$upload_to_ftp_site."'\n";
+print defined $upload_to_ftp_site ? 'Defined' : 'Not defined';
+print "\n";
+
+
+#exit;
+
+
+
+
 if(defined($public_release_repository))
 {
+    print "DEBUG - public\n";exit;
   ReferenceTrack::Controller->new(
       database_settings => \%database_settings,
       public_release    => $public_release_repository,
@@ -81,6 +101,7 @@ if(defined($public_release_repository))
 }
 elsif(defined($major_release))
 {
+    print "DEBUG - major\n";exit;
   ReferenceTrack::Controller->new(
       database_settings => \%database_settings,
       major_release     => $major_release,
@@ -88,6 +109,7 @@ elsif(defined($major_release))
 }
 elsif(defined($minor_release))
 {
+    print "DEBUG - minor\n";exit;
   ReferenceTrack::Controller->new(
       database_settings => \%database_settings,
       minor_release     => $minor_release,
@@ -95,6 +117,7 @@ elsif(defined($minor_release))
 }
 elsif(defined($upload_to_ftp_site))
 {
+    print "Debug: upload '$upload_to_ftp_site'\n"; #exit;
   ReferenceTrack::Controller->new(
       database_settings  => \%database_settings,
       upload_to_ftp_site => $upload_to_ftp_site,
@@ -102,6 +125,7 @@ elsif(defined($upload_to_ftp_site))
 }
 else
 {
+    print "DEBUG - else\n";exit;
    ReferenceTrack::Controller->new(
        database_settings => \%database_settings,
        add_repository    => \@repository_details,
