@@ -27,6 +27,8 @@ use Getopt::Long;
 use ReferenceTrack::Repository::Search;
 use ReferenceTrack::Repository::Warehouse;
 
+my $default_warehouse = '/lustre/scratch108/pathogen/cp7/test_reference_repo/Warehouse'; # default location
+
 # usage info
 my $usage = qq[
 Usage: $0
@@ -65,7 +67,7 @@ if($help)
 
 ( $database ) or die("Error: A database name must be supplied\n".$usage);
 
-$warehouse ||= '/lustre/scratch108/pathogen/cp7/test_reference_repo/Warehouse'; # default location
+$warehouse ||= $default_warehouse; # default location if warehouse not supplied
 -d $warehouse or die("Error: -warehouse must be a directory.\n".$usage); 
 -w $warehouse or die("Error: -warehouse must be writable.\n".$usage);
 
