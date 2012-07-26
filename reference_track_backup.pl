@@ -65,7 +65,8 @@ if($help)
 
 ( $database ) or die("Error: A database name must be supplied\n".$usage);
 
-$warehouse ||= '/warehouse/pathogen_wh03/references'; # default location
+#$warehouse ||= '/warehouse/pathogen_wh03/references'; # default location
+$warehouse ||= '/lustre/scratch108/pathogen/cp7/Test_DB/data/warehouse'; # default location
 -d $warehouse or die("Error: -warehouse must be a directory.\n".$usage); 
 -w $warehouse or die("Error: -warehouse must be writable.\n".$usage);
 

@@ -21,7 +21,8 @@ use File::chdir;
 use Data::Dumper;
 
 
-has 'public_directory' => ( is => 'ro', isa => 'Str',  default => '/nfs/disk69/ftp/pub/pathogens/refs' );
+#has 'public_directory' => ( is => 'ro', isa => 'Str',  default => '/nfs/disk69/ftp/pub/pathogens/refs' );
+has 'public_directory' => ( is => 'ro', isa => 'Str',  default => '/lustre/scratch108/pathogen/cp7/Test_DB/data/ftp_site' );
 has '_file_list' => (
         traits  => ['Array'],
         is      => 'rw',

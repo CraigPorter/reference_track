@@ -61,11 +61,13 @@ reference_track_management.pl --upload_to_ftp_site "3D7"
 USAGE
 ;
 
-$database ||= 'pathogen_reference_track';
+#$database ||= 'pathogen_reference_track';
+$database ||= 'pathogen_cp7_ref_test';
 my %database_settings;
 $database_settings{database} = $database ;
 $database_settings{host} = $ENV{VRTRACK_HOST} || 'mcs6';
-$database_settings{port} = $ENV{VRTRACK_PORT} || 3347;
+#$database_settings{port} = $ENV{VRTRACK_PORT} || 3347;
+$database_settings{port} = $ENV{VRTRACK_PORT} || 3346;
 $database_settings{ro_user} = $ENV{VRTRACK_RO_USER}  || 'pathpipe_ro';
 $database_settings{rw_user} =  $ENV{VRTRACK_RW_USER} || 'pathpipe_rw';
 $database_settings{password} = $ENV{VRTRACK_PASSWORD};

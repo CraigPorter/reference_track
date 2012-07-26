@@ -20,7 +20,8 @@ use ReferenceTrack::Repository::Version;
 use ReferenceTrack::Repository::Git::Remote;
 extends 'ReferenceTrack::Repository::Common';
 
-has 'repository_root'  => ( is => 'ro', isa => 'Str', default => '/nfs/pathnfs02/references');
+#has 'repository_root'  => ( is => 'ro', isa => 'Str', default => '/nfs/pathnfs02/references');
+has 'repository_root'  => ( is => 'ro', isa => 'Str', default => '/lustre/scratch108/pathogen/cp7/Test_DB/data/reference');
 
 
 sub add
