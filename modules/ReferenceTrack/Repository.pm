@@ -34,8 +34,10 @@ sub name_exists
 {
   my ($self) = @_;
   my $repository = ReferenceTrack::Repositories->new(_dbh     => $self->_dbh);
+  print "Query: '",$self->name,"' - "; # debug
   $repository->find_by_name($self->name);
-  return 1 if(defined($repository->find_by_name($self->name) ));
+#  return 1 if(defined($repository->find_by_name($self->name) ));
+  return 1 if(defined($repository->find_by_exact_name($self->name) ));
 
   return 0;
 }

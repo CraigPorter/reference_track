@@ -43,7 +43,7 @@ sub run
 {
   my($self) = @_;
 
-  if((defined($self->creation_details) )&& @{$self->creation_details} ==3)
+  if((defined($self->creation_details) )&& (@{$self->creation_details}==2 || @{$self->creation_details}==3))
   {
     $self->_create_reference_repository();
   }

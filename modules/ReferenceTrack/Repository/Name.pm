@@ -21,7 +21,7 @@ use ReferenceTrack::Repository::Types;
 
 has 'genus'      => ( is => 'ro', isa => 'ReferenceTrack::Repository::Name::Genus',      required => 1, coerce => 1 );
 has 'subspecies' => ( is => 'ro', isa => 'ReferenceTrack::Repository::Name::Subspecies', required => 1, coerce => 1 );
-has 'strain'     => ( is => 'ro', isa => 'ReferenceTrack::Repository::Name::Strain',     required => 1);
+has 'strain'     => ( is => 'ro', isa => 'Maybe[ReferenceTrack::Repository::Name::Strain]',     required => 1);
 has 'short_name' => ( is => 'ro', isa => 'ReferenceTrack::Repository::Name::ShortName',  required => 1 );
 
 
@@ -31,14 +31,19 @@ has 'human_readable_name' => ( is => 'ro', isa => 'Str', lazy => 1, builder => '
 sub _build_repository_name
 {
   my($self) = @_;
-  my $base_repo_name = join("_", ($self->genus, $self->subspecies, $self->strain));
+#  my $base_repo_name = join("_", ($self->genus, $self->subspecies, $self->strain));
+  my $base_repo_name = join("_", ($self->genus, $self->subspecies));
+  $base_repo_name = join("_", ($base_repo_name, $self->strain)) if defined($self->strain);
   join('.', ($base_repo_name, 'git'));
 }
 
 sub _build_human_readable_name
 {
   my($self) = @_;
-  join(" ", ($self->genus, $self->subspecies, $self->strain));
+#  join(" ", ($self->genus, $self->subspecies, $self->strain));
+  my $name = join(" ", ($self->genus, $self->subspecies));
+  $name = join(" ", ($name, $self->strain)) if defined $self->strain;
+  return $name;
 }
 
 
