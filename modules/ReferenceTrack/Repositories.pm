@@ -22,9 +22,10 @@ has '_dbh'                         => ( is => 'rw', required   => 1 );
 
 sub _find_all_by_name_result_set
 {
-  my ($self,$query) = @_;
+  my ($self,$query,$exact_match) = @_;
   return if Scalar::Util::tainted($query); 
-  $self->_dbh->resultset('Repositories')->search({ name => { -like => '%'.$query.'%' } });
+  my $search_term = $exact_match ? $query : '%'.$query.'%';
+  $self->_dbh->resultset('Repositories')->search({ name => { -like => $search_term } });
 }
 
 sub find_all_by_name
@@ -39,6 +40,13 @@ sub find_by_name
    my ($self,$query) = @_;
    $self->_find_all_by_name_result_set($query)->first;
 }
+
+sub find_by_full_name
+{
+   my ($self,$query) = @_;
+   $self->_find_all_by_name_result_set($query, 1)->first;
+}
+
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;

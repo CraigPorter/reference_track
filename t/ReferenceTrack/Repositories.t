@@ -18,7 +18,8 @@ $dbh->resultset('Repositories')->create({ name => "existing repo", location => '
 $dbh->resultset('Repositories')->create({ name => "another repo",  location => 'some_location.git', short_name => "ABC3"   });
 
 ok my $repository = ReferenceTrack::Repositories->new( _dbh     => $dbh), 'initialise repositories';
-is 'some_location.git' , $repository->find_by_name('repo')->location, 'return a single row';
+is 'some_location.git' , $repository->find_by_name('repo')->location, 'return a single row (find_by_name)';
+is 'some_location.git' , $repository->find_by_full_name('existing repo')->location, 'return a single row (find_by_full_name)';
 
 is 2, @{$repository->find_all_by_name('repo')}, 'get all matching rows';
 is 'some_location.git', $repository->find_all_by_name('repo')->[0]->location,'check that the rows are actually returned for first element';
