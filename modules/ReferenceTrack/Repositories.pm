@@ -42,7 +42,7 @@ sub find_by_name
    $self->_find_all_by_name_result_set($query)->first;
 }
 
-sub find_by_exact_name
+sub find_by_full_name
 {
    my ($self,$query) = @_;
    $self->_find_all_by_name_result_set($query, 1)->first;

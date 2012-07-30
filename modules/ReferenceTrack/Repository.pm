@@ -37,7 +37,7 @@ sub name_exists
   print "Query: '",$self->name,"' - "; # debug
   $repository->find_by_name($self->name);
 #  return 1 if(defined($repository->find_by_name($self->name) ));
-  return 1 if(defined($repository->find_by_exact_name($self->name) ));
+  return 1 if(defined($repository->find_by_full_name($self->name) ));
 
   return 0;
 }
