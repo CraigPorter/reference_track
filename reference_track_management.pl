@@ -32,7 +32,7 @@ my ($database, @repository_details, $public_release_repository,@creation_details
 GetOptions ('database|d=s'    => \$database,
             'a|add=s{2}'         => \@repository_details,
             'p|public_release=s'   => \$public_release_repository,
-            'c|create=s{3}'        => \@creation_details,
+            'c|create=s{2,3}'      => \@creation_details,
             's|starting_version=s' => \$starting_version,
             'n|short_name=s'       => \$short_name,
             'm|major_release=s'    => \$major_release,
@@ -41,7 +41,7 @@ GetOptions ('database|d=s'    => \$database,
             
 );
 
-((@repository_details == 2) || defined $upload_to_ftp_site ||$public_release_repository || $major_release || $minor_release || (@creation_details == 3 && $short_name))or die <<USAGE;
+((@repository_details == 2) || defined $upload_to_ftp_site ||$public_release_repository || $major_release || $minor_release || ((@creation_details == 2 || @creation_details == 3) && $short_name))or die <<USAGE;
 Usage: $0 [options]
 Query the reference tracking system
 
