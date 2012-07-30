@@ -35,7 +35,7 @@ sub name_exists
   my ($self) = @_;
   my $repository = ReferenceTrack::Repositories->new(_dbh     => $self->_dbh);
   $repository->find_by_name($self->name);
-  return 1 if(defined($repository->find_by_name($self->name) ));
+  return 1 if(defined($repository->find_by_full_name($self->name) ));
 
   return 0;
 }
